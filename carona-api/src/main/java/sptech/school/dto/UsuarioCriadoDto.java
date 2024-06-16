@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
-import sptech.school.enity.Endereco;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Endereco;
+import sptech.school.entity.Usuario;
 
 
 import java.time.LocalDate;

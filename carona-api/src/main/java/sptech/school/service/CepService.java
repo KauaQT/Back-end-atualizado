@@ -2,7 +2,6 @@
 package sptech.school.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import sptech.school.enity.Endereco;
 
 @Service
 public class CepService {

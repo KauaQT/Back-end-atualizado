@@ -1,4 +1,4 @@
-package sptech.school.enity;
+package sptech.school.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

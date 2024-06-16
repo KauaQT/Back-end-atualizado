@@ -1,21 +1,18 @@
 package sptech.school.controller;
 
-import com.itextpdf.text.log.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sptech.school.dto.FeedbackEspecificoDto;
 import sptech.school.dto.FeedbackPrincipalDto;
 import sptech.school.dto.FeedbackRequestDto;
 import sptech.school.dto.RetornoFeedbackDto;
-import sptech.school.enity.CriteriosFeedback;
-import sptech.school.enity.Feedback;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.CriteriosFeedback;
+import sptech.school.entity.Feedback;
+import sptech.school.entity.Usuario;
 import sptech.school.service.FeedBackService;
 import sptech.school.service.UsuarioService;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/feedback")

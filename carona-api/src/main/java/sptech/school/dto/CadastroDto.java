@@ -2,8 +2,7 @@ package sptech.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import sptech.school.enity.Endereco;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Usuario;
 
 import java.util.List;
 

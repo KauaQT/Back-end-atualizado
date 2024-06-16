@@ -2,7 +2,7 @@ package sptech.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import sptech.school.enity.Viagem;
+import sptech.school.entity.Viagem;
 
 import java.time.LocalDate;
 

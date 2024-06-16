@@ -1,6 +1,6 @@
 package sptech.school.dto;
 
-import sptech.school.enity.Viagem;
+import sptech.school.entity.Viagem;
 
 public class ViagemMapper {
 

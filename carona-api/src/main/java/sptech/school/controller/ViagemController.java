@@ -1,6 +1,5 @@
 package sptech.school.controller;
 
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.dto.*;
-import sptech.school.enity.Usuario;
-import sptech.school.enity.Viagem;
+import sptech.school.entity.Usuario;
+import sptech.school.entity.Viagem;
 import sptech.school.service.UsuarioService;
 import sptech.school.service.ViagemService;
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/viagem")

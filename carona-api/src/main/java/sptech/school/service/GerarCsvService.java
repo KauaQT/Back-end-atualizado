@@ -1,6 +1,6 @@
 package sptech.school.service;
 
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Usuario;
 
 import java.io.File;
 import java.io.FileWriter;

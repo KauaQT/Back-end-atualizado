@@ -2,10 +2,9 @@ package sptech.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Usuario;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter

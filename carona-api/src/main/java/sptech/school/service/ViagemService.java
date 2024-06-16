@@ -30,15 +30,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sptech.school.Response.GeocodingResponse;
 import sptech.school.dto.*;
-import sptech.school.enity.*;
+import sptech.school.entity.*;
 import sptech.school.repository.*;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

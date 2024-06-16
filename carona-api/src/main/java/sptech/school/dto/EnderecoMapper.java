@@ -1,6 +1,6 @@
 package sptech.school.dto;
 
-import sptech.school.enity.Endereco;
+import sptech.school.entity.Endereco;
 
 public class EnderecoMapper {
 

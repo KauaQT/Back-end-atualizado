@@ -2,8 +2,8 @@ package sptech.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import sptech.school.enity.CriteriosFeedback;
-import sptech.school.enity.Feedback;
+import sptech.school.entity.CriteriosFeedback;
+import sptech.school.entity.Feedback;
 
 @Getter
 @Setter

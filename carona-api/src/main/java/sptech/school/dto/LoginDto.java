@@ -2,7 +2,7 @@ package sptech.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import sptech.school.enity.Endereco;
+import sptech.school.entity.Endereco;
 
 @Getter
 @Setter

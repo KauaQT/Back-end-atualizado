@@ -1,4 +1,4 @@
-package sptech.school.enity;
+package sptech.school.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -6,13 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import sptech.school.enity.Carro;
-import sptech.school.enity.Endereco;
-import sptech.school.enity.Viagem;
 
 import java.time.LocalDate;
 import java.time.Period;

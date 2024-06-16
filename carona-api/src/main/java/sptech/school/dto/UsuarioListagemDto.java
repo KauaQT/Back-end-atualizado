@@ -1,11 +1,9 @@
 package sptech.school.dto;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Usuario;
 
 import java.time.LocalDate;
 

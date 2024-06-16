@@ -2,8 +2,8 @@ package sptech.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import sptech.school.enity.Feedback;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Feedback;
+import sptech.school.entity.Usuario;
 
 import java.util.List;
 
