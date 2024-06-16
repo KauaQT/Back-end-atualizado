@@ -1,6 +1,6 @@
 package sptech.school.dto;
-import sptech.school.enity.Carro;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Carro;
+import sptech.school.entity.Usuario;
 
 public class CarroMapper {
     public static CarroDto toCarroDto(Carro carro) {

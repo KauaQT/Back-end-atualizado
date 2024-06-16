@@ -2,8 +2,8 @@ package sptech.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import sptech.school.enity.Usuario;
-import sptech.school.enity.Viagem;
+import sptech.school.entity.Usuario;
+import sptech.school.entity.Viagem;
 
 import java.time.LocalDate;
 import java.util.List;

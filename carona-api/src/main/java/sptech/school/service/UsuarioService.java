@@ -1,18 +1,13 @@
 package sptech.school.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sptech.school.dto.FeedbackDetalhes;
 import sptech.school.dto.PerfilDto;
-import sptech.school.dto.UsuarioCriadoDto;
-import sptech.school.dto.UsuarioMapper;
-import sptech.school.enity.Feedback;
-import sptech.school.enity.Usuario;
-import sptech.school.enity.Viagem;
+import sptech.school.entity.Feedback;
+import sptech.school.entity.Usuario;
 import sptech.school.repository.FeedbackRepository;
 import sptech.school.repository.UsuarioRespository;
 import sptech.school.repository.ViagemRepository;

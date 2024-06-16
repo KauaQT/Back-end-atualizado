@@ -6,8 +6,8 @@ import sptech.school.dto.CarroCadastroDto;
 import sptech.school.dto.CarroDto;
 import sptech.school.dto.CarroMapper;
 import sptech.school.dto.UsuarioListagemCarro;
-import sptech.school.enity.Carro;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Carro;
+import sptech.school.entity.Usuario;
 import sptech.school.repository.CarroRepository;
 import sptech.school.repository.UsuarioRespository;
 

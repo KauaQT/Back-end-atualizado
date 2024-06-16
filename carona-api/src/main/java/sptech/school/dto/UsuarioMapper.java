@@ -2,9 +2,8 @@ package sptech.school.dto;
 
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.Mapping;
-import sptech.school.enity.Endereco;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Endereco;
+import sptech.school.entity.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;

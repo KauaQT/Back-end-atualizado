@@ -1,7 +1,7 @@
 package sptech.school.dto;
 
 import org.springframework.stereotype.Component;
-import sptech.school.enity.Usuario;
+import sptech.school.entity.Usuario;
 
 @Component
 public class MapperUtil {
