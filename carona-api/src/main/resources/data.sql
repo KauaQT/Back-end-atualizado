@@ -1,6 +1,0 @@
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Ewerton Lima', '46517530860', 'ewerton.lima@sptech.school', 'f05dd3c7056c3ab5138cc52c57adf915', '2005-09-04', 'M', 'USUARIO');
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Kaua Telles', '05332947484', 'kaua.telles@sptech.school', '14992604fb491f36f1c32755207b1991', '2002-02-12', 'F', 'MOTORISTA');
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Gustavo Torres', '23594943097', 'gustavo.torres@gmail.com', '62c29134d25099c5aaf1da3469100a84', '2006-04-18', 'M', 'USUARIO');
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Silvio Oliveira', '34985243051', 'silvio.oliveira@gmail.com', '5a9c23d54317bce525a1bc06721a7566', '2002-04-16', 'F', 'MOTORISTA');
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Mariana Silva', '64931166008', 'mariana.silva@gmail.com', 'c13b33fb1615dd284425dcd29ef3da5b', '2007-01-19', 'M', 'USUARIO');
-INSERT INTO usuario (nome, cpf, email, senha, dataNascimento, genero, tipoUsuario) VALUES ('Diego Hessel', '18167181812', 'diego.hessel@gmail.com', '5f0b692e2ea949b8e6b7c482f16c4954', '2001-03-10', 'F', 'MOTORISTA');
