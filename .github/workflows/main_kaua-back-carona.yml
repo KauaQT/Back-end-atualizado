@@ -26,7 +26,6 @@ jobs:
           
           cd carona-api
           mvn clean install
-          displayName: 'Build with Maven'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
