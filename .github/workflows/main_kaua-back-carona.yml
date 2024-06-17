@@ -22,15 +22,14 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: cd ..
-          cd carona-api
-          mvn clean install
+        run: |
+          cd .. && cd carona-api && mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: carona-api/target/*.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,20 +38,20 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-  
+      id-token: write # This is required for requesting the JWT
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: java-app
-      
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_DC9578DE06F245AEB61D2A9224F28790 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4DCBA45F01204B909CA9A22D7DF5118A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8B872662D3C549EABFF56A98AA56CBEA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -61,4 +60,3 @@ jobs:
           app-name: 'kaua-back-carona'
           slot-name: 'Production'
           package: '*.jar'
-          
