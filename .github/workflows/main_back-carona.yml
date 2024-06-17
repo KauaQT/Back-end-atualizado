@@ -21,8 +21,8 @@ jobs:
         with:
           java-version: '17'
 
-      - name: entrando diretporio raiz
-        run: cd carona
+      - name: entrando diretório raiz
+        run: cd carona-api
 
       - name: Build with Maven
         run: mvn clean install
