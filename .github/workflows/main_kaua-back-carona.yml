@@ -48,7 +48,12 @@ jobs:
         with:
           name: java-app
 
-      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: 7BF71806109A45A78537B3115FF20B66
+          tenant-id: 1BCC64EA882D4F09A92A5B14CC5E79EC
+          subscription-id: 0533FBCFB45149B4A4CEFDAE03B8DFC8
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
