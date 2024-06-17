@@ -51,8 +51,8 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: 688ace07-87db-4e55-8d84-a80a61de219b
-          tenant-id: 43afa4f0-863d-4f65-864e-c4a9d7769235
+          client-id: c6c48fa5-6ba9-434c-9d1d-bb912e87cf55
+          tenant-id: fd50b457-84e0-400c-80f2-460f28eb41a6
           subscription-id: fd50b457-84e0-400c-80f2-460f28eb41a6
 
       - name: Deploy to Azure Web App
