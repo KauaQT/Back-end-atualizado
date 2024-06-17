@@ -232,24 +232,30 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping("/solicitarRecuperacaoSenha/{id}")
-    public ResponseEntity<UsuarioAtualizacaoSenha> solicitarRecuperacaoSenha(@PathVariable int id) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
-        if (optionalUsuario.isPresent()) {
-            Usuario usuario = optionalUsuario.get();
+    @PostMapping("/solicitarRecuperacaoSenha")
+    public ResponseEntity<String> solicitarRecuperacaoSenha(@RequestParam String email) {
+        if (!isValidEmail(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null) {
             try {
                 String codigo = EmailService.enviarTokenRecuperacao(usuario.getEmail());
                 usuario.setCodigoRecuperacaoSenha(codigo);
                 usuarioRepository.save(usuario);
-                return ResponseEntity.status(200).body(UsuarioMapper.toUsuarioAtualizacaoSenha(usuario));
+                return ResponseEntity.status(200).body("Código de recuperação gerado com sucesso");
             } catch (Exception e) {
-                return ResponseEntity.status(500).build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
+    private boolean isValidEmail(String email) {
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
     @PutMapping("/recuperarSenha")
     public ResponseEntity<UsuarioAtualizadoDto> recuperarSenha(@RequestParam String email, @RequestParam String novaSenha , @RequestParam String token) {
         Usuario usuario = usuarioRepository.findByEmail(email);

@@ -37,12 +37,12 @@ public class ViagemController {
     }
 
     @PostMapping("/reservar-viagem/{idViagem}/{idUsuario}")
-    public ResponseEntity<ReservaViagemDto> reservarViagem(@PathVariable Integer idViagem, @PathVariable Integer idUsuario) {
+    public ResponseEntity<?> reservarViagem(@PathVariable Integer idViagem, @PathVariable Integer idUsuario) {
         try {
             ReservaViagemDto reservaViagemDto = viagemService.reservarViagem(idViagem, idUsuario);
             return ResponseEntity.ok(reservaViagemDto);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -190,6 +190,19 @@ public class ViagemController {
 
     @GetMapping("/detalhesViagens/{idViagens}")
     public ResponseEntity<DetalhesViagemDto> detalhesViagens(@PathVariable Integer idViagens) {
-     return null;
+        Viagem viagem = viagemService.buscarViagemPorId(idViagens);
+        if (viagem == null) {
+            throw new IllegalArgumentException("Viagem não encontrada com o ID fornecido");
+        }
+
+        DetalhesViagemDto detalhesViagemDto = viagemService.detalhesViagem(idViagens);
+
+
+        double mediaEstrelasMotorista = viagemService.calcularMediaEstrelas(viagem.getMotorista());
+
+        detalhesViagemDto.setQuantidadeEstrelas(mediaEstrelasMotorista);
+
+        return ResponseEntity.ok(detalhesViagemDto);
     }
+
 }

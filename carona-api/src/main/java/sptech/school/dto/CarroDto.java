@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CarroDto {
+
+    private Integer id;
     private String marca;
     private String modelo;
     private String placa;

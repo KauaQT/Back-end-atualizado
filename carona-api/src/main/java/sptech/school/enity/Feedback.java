@@ -27,4 +27,8 @@ public class Feedback {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "criterios_feedback_id")
     private CriteriosFeedback criteriosFeedback;
+
+    @ManyToOne
+    @JoinColumn(name = "viagem_id")
+    private Viagem viagem;
 }

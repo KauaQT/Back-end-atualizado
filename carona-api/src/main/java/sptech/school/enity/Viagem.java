@@ -73,6 +73,8 @@ public class Viagem {
     @JoinColumn(name = "fk_carro")
     private Carro carro;
 
+    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feedback> feedbacks = new ArrayList<>();
     public void addPassageiro(Usuario passageiro) {
         if (passageiro.equals(this.motorista)) {
             throw new IllegalArgumentException("O motorista não pode ser adicionado como passageiro na própria viagem.");

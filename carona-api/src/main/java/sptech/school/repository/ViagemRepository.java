@@ -2,6 +2,7 @@ package sptech.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import sptech.school.enity.Usuario;
 import sptech.school.enity.Viagem;
 
@@ -11,8 +12,6 @@ import java.util.List;
 public interface ViagemRepository extends JpaRepository<Viagem, Integer> {
 
     // Consulta para buscar todas as viagens juntamente com os motoristas associados filtrando pelo horário
-    @Query("SELECT v FROM Viagem v JOIN FETCH v.motorista WHERE v.diaViagem = :horario") // Corrigido para v.diaViagem
-    List<Viagem> findViagensAndUsuariosByHorario(LocalDate horario);
 
     // Método para buscar todas as viagens associadas a um motorista específico
     List<Viagem> findByMotorista(Usuario motorista);
@@ -22,5 +21,8 @@ public interface ViagemRepository extends JpaRepository<Viagem, Integer> {
 
     // findByListaPassageirosContains
     List<Viagem> findByListaPassageirosContains(Usuario passageiro);
+
+    @Query("SELECT v FROM Viagem v WHERE v.diaViagem = :dataViagem")
+    List<Viagem> findViagensByDataViagem(@Param("dataViagem") LocalDate dataViagem);
 
 }

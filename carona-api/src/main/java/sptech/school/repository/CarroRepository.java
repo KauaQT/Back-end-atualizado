@@ -1,6 +1,7 @@
 package sptech.school.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import sptech.school.dto.ListagemCarro;
 import sptech.school.enity.Carro;
 import sptech.school.enity.Usuario;
 

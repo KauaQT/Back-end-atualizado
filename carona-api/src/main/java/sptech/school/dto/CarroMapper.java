@@ -11,6 +11,25 @@ public class CarroMapper {
         carroDto.setPlaca(carro.getPlaca());
         return carroDto;
     }
+
+    // ListagemCarro
+    public static ListagemCarro toListagemCarro(Carro carro) {
+        ListagemCarro listagemCarro = new ListagemCarro();
+        listagemCarro.setIdCarro(carro.getId());
+        listagemCarro.setMarca(carro.getMarca());
+        listagemCarro.setModelo(carro.getModelo());
+        listagemCarro.setPlaca(carro.getPlaca());
+        return listagemCarro;
+    }
+
+    public static CarroDto toListagemCarroDto(ListagemCarro listagemCarro) {
+        CarroDto carroDto = new CarroDto();
+        carroDto.setId(listagemCarro.getIdCarro());
+        carroDto.setMarca(listagemCarro.getMarca());
+        carroDto.setModelo(listagemCarro.getModelo());
+        carroDto.setPlaca(listagemCarro.getPlaca());
+        return carroDto;
+    }
     public static Carro toCarro(CarroDto carroDto) {
         Carro carro = new Carro();
         carro.setCor(carroDto.getCor());

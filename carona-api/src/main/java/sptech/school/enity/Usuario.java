@@ -69,6 +69,10 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "motorista")
     private List<Viagem> viagens;
 
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Feedback> feedbacks;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -113,4 +117,6 @@ public class Usuario implements UserDetails {
         }
         return null;
     }
+
+
 }

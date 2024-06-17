@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.dto.CarroCadastroDto;
 import sptech.school.dto.CarroDto;
+import sptech.school.dto.ListagemCarro;
 import sptech.school.dto.UsuarioListagemCarro;
 import sptech.school.service.CarroService;
 
@@ -27,12 +28,13 @@ public class CarroController {
             return ResponseEntity.ok(carroDto);
         }
 
-        @GetMapping("/listar-carros/{idUsuario}")
-        public ResponseEntity<List<CarroDto>> listarCarros(@PathVariable Integer idUsuario) {
-            List<CarroDto> usuarioListagemCarros = carroService.listarCarros(idUsuario);
-            return ResponseEntity.ok(usuarioListagemCarros);
-        }
-        @PutMapping("/atualizar-carro/{idCarro}")
+    @GetMapping("/listar-carros/{idUsuario}")
+    public ResponseEntity<List<ListagemCarro>> listarCarros(@PathVariable Integer idUsuario) {
+        List<ListagemCarro> usuarioListagemCarros = carroService.listarCarros(idUsuario);
+        return ResponseEntity.ok(usuarioListagemCarros);
+    }
+
+    @PutMapping("/atualizar-carro/{idCarro}")
         public ResponseEntity<CarroDto> atualizarCarro(@PathVariable Integer idCarro, @RequestBody CarroCadastroDto carroCadastroDto) {
             CarroDto carroDto = carroService.atualizarCarro(idCarro, carroCadastroDto);
             return ResponseEntity.ok(carroDto);

@@ -19,4 +19,8 @@ public class ListagemMotoristaViagem {
     private Float valor;
     private Double distanciaPontoPartidaViagem;
     private Double distanciaPontoDestinoViagem;
+    private Double latitudePontoPartida;
+    private Double longitudePontoPartida;
+    private Double latitudePontoDestino;
+    private Double longitudePontoDestino;
 }

@@ -92,28 +92,38 @@ public class ViagemService {
     private static final String GOOGLE_MAPS_DISTANCIA = "https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&key=AIzaSyCjfdkq8uHIzU3mr1OZqAtkJggC-k2PZdo";
 
 
+    private final String apiKey = "YOUR_API_KEY_HERE";
+
+    private static final Logger logger = LoggerFactory.getLogger(ViagemService.class);
+
+
     @Transactional
     public RetornoViagemDto saveViagem(ViagemDTO viagemDTO) {
         Objects.requireNonNull(viagemDTO, "ViagemDTO não pode ser nulo");
 
+        System.out.println("Iniciando o processo de salvar uma nova viagem...");
+
         Usuario motorista = usuarioRepository.findById(viagemDTO.getIdMotorista())
                 .orElseThrow(() -> new IllegalArgumentException("Motorista não encontrado para o ID: " + viagemDTO.getIdMotorista()));
 
-        if (viagemDTO.getPassageiros() != null && viagemDTO.getPassageiros().contains(viagemDTO.getIdMotorista())) {
-            throw new IllegalArgumentException("O motorista não pode cadastrar ele mesmo na viagem.");
-        }
+        System.out.println("Motorista encontrado: " + motorista.getNome());
 
-        if (viagemDTO.getLatitudePontoPartida() == null || viagemDTO.getLongitudePontoPartida() == null ||
-                viagemDTO.getLatitudePontoDestino() == null || viagemDTO.getLongitudePontoDestino() == null) {
-            throw new IllegalArgumentException("Latitude ou longitude não pode ser nula");
-        }
+
+        System.out.println("Verificando passageiros...");
+
+
+        System.out.println("Verificando localizações...");
 
         Carro carro = carroRepository.findById(viagemDTO.getIdCarro())
                 .orElseThrow(() -> new IllegalArgumentException("Carro não encontrado para o ID: " + viagemDTO.getIdCarro()));
 
+        System.out.println("Carro encontrado: " + carro.getModelo());
+
         Partida partida = new Partida();
         partida.setPontoPartida(extrairEndereco(buscarEndereco(viagemDTO.getLatitudePontoPartida(), viagemDTO.getLongitudePontoPartida())));
         partida = partidaRepository.save(partida);
+
+        System.out.println("Partida registrada: " + partida.getPontoPartida());
 
         Destino destino = (Destino) destinoRepository.findByPontoDestino(extrairEndereco(buscarEndereco(viagemDTO.getLatitudePontoDestino(), viagemDTO.getLongitudePontoDestino())))
                 .orElseGet(() -> {
@@ -121,6 +131,8 @@ public class ViagemService {
                     novoDestino.setPontoDestino(extrairEndereco(buscarEndereco(viagemDTO.getLatitudePontoDestino(), viagemDTO.getLongitudePontoDestino())));
                     return destinoRepository.save(novoDestino);
                 });
+
+        System.out.println("Destino registrado: " + destino.getPontoDestino());
 
         String tempoMedioViagemStr = "";
         try {
@@ -141,6 +153,8 @@ public class ViagemService {
         }
 
         int tempoTotalMinutos = horas * 60 + minutos;
+
+        System.out.println("Tempo médio de viagem calculado: " + tempoMedioViagemStr);
 
         Viagem viagem = new Viagem();
         viagem.setPartida(partida);
@@ -165,6 +179,8 @@ public class ViagemService {
         }
 
         viagem = viagemRepository.save(viagem);
+
+        System.out.println("Viagem salva com sucesso!");
 
         RetornoViagemDto retornoViagemDto = new RetornoViagemDto();
         retornoViagemDto.setIdViagem(viagem.getIdViagem());
@@ -365,77 +381,97 @@ public class ViagemService {
 
     public List<ListagemMotoristaViagem> buscarViagensProximas(Double latitudePartida, Double longitudePartida,
                                                                Double latitudeDestino, Double longitudeDestino,
-                                                               LocalDate dataHoraViagem) {
+                                                               LocalDate dataViagem) {
         Logger logger = LoggerFactory.getLogger(getClass());
-        double maxDistancia = 100.0; // Definir distância máxima aceitável
+        double maxDistancia = 100.0;
 
         String origem = extrairEndereco(buscarEndereco(latitudePartida, longitudePartida));
         String destino = extrairEndereco(buscarEndereco(latitudeDestino, longitudeDestino));
 
+        Coordenadas coordenadasOrigem = retornarLatitudeLongitude(origem);
+        Coordenadas coordenadasDestino = retornarLatitudeLongitude(destino);
+        double latitudeOrigem = coordenadasOrigem.getLatitude();
+        double longitudeOrigem = coordenadasOrigem.getLongitude();
+        double latitudeDestinoUsuario = coordenadasDestino.getLatitude();
+        double longitudeDestinoUsuario = coordenadasDestino.getLongitude();
+
+
+
         logger.info("Origem: {}", origem);
         logger.info("Destino: {}", destino);
 
-        List<Viagem> viagensParaHorario = viagemRepository.findViagensAndUsuariosByHorario(dataHoraViagem);
+        // Consultar todas as viagens para o dia especificado
+        List<Viagem> viagensParaDia = viagemRepository.findViagensByDataViagem(dataViagem);
 
-        logger.info("Consultou viagens para a data/hora da viagem: {}", dataHoraViagem);
+        logger.info("Consultou viagens para o dia: {}", dataViagem);
 
         Map<Usuario, Double> distanciasMotoristas = new HashMap<>();
 
-        for (Viagem viagem : viagensParaHorario) {
-            String localizacaoMotorista = viagem.getPartida().getPontoPartida();
-
+        for (Viagem viagem : viagensParaDia) {
+            // Verificar se a localização de partida e destino está dentro do limite de distância
             try {
-                double distancia = calcularDistancia(origem, localizacaoMotorista);
-                if (distancia > maxDistancia) {
+                double distanciaOrigem = calcularDistancia(origem, viagem.getPartida().getPontoPartida());
+                double distanciaDestino = calcularDistancia(destino, viagem.getDestino().getPontoDestino());
+
+                if (distanciaOrigem > maxDistancia || distanciaDestino > maxDistancia) {
                     continue;
                 }
-                distanciasMotoristas.put(viagem.getMotorista(), distancia);
             } catch (Exception e) {
                 logger.error("Erro ao calcular a distância entre origem e destino: {}", e.getMessage());
+                continue;
             }
+
+            // Verificar se a viagem ocorre no dia especificado
+            if (!viagem.getDiaViagem().isEqual(dataViagem)) {
+                continue;
+            }
+
+            distanciasMotoristas.put(viagem.getMotorista(), 0.0); // Adicionar motorista com distância zero
         }
 
-        List<Usuario> motoristasOrdenados = distanciasMotoristas.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
+        // Ordenar os motoristas por distância (neste caso, todos estão a uma distância de 0)
+        List<Usuario> motoristasOrdenados = distanciasMotoristas.keySet().stream()
+                .sorted(Comparator.comparing(Usuario::getNome)) // Ordenar por nome para garantir consistência
                 .collect(Collectors.toList());
 
         logger.info("Motoristas ordenados por distância: {}", motoristasOrdenados);
 
+        // Preparar os DTOs para retorno
         List<ListagemMotoristaViagem> dtos = new ArrayList<>();
         for (Usuario motorista : motoristasOrdenados) {
-            List<Viagem> viagens = motorista.getViagens();
-            if (viagens != null && !viagens.isEmpty()) {
-                Viagem viagem = viagens.get(viagens.size() - 1);
-
-                double tempoEntreViagem = 0.0;
-                if (!viagem.getPartida().getPontoPartida().equals(origem)) {
-                    try {
-                        tempoEntreViagem = calcularTempo(viagem.getPartida().getPontoPartida(), origem);
-                    } catch (Exception e) {
-                        logger.error("Erro ao calcular o tempo entre viagens: {}", e.getMessage());
-                    }
+            // Iterar sobre as viagens do motorista
+            for (Viagem viagem : motorista.getViagens()) {
+                // Verificar se a viagem ocorre no dia especificado
+                if (!viagem.getDiaViagem().isEqual(dataViagem)) {
+                    continue;
                 }
 
+                // Construir o DTO
                 ListagemMotoristaViagem dto = new ListagemMotoristaViagem();
                 dto.setIdViagem(viagem.getIdViagem());
                 dto.setNomeMotorista(motorista.getNome());
                 dto.setInicioViagem(viagem.getHorarioViagem());
+                dto.setLatitudePontoDestino(latitudeDestinoUsuario);
+                dto.setLongitudePontoDestino(longitudeDestinoUsuario);
+                dto.setLatitudePontoPartida(latitudeOrigem);
+                dto.setLongitudePontoPartida(longitudeOrigem);
+
+                // Calcular distâncias e adicionar ao DTO
                 try {
-                    dto.setFimViagem(calcularFimViagem(viagem.getHorarioViagem(), dataHoraViagem, origem, destino));
                     dto.setDistanciaPontoPartidaViagem(calcularDistancia(origem, viagem.getPartida().getPontoPartida()));
                     dto.setDistanciaPontoDestinoViagem(calcularDistancia(destino, viagem.getDestino().getPontoDestino()));
                 } catch (Exception e) {
-                    logger.error("Erro ao calcular o fim da viagem: {}", e.getMessage());
+                    logger.error("Erro ao calcular a distância: {}", e.getMessage());
                 }
-                dto.setValor(viagem.getValor());
 
+                // Adicionar DTO à lista de retorno
                 dtos.add(dto);
             }
         }
 
         return dtos;
     }
+
 
     private double calcularDistancia(String origem, String destino) throws Exception {
         OkHttpClient client = new OkHttpClient();
@@ -562,7 +598,7 @@ public class ViagemService {
         List<Viagem> viagensParaHorario = new ArrayList<>();
 
         try {
-            viagensParaHorario = viagemRepository.findViagensAndUsuariosByHorario(horaViagem);
+            viagensParaHorario = viagemRepository.findViagensByDataViagem(horaViagem);
 
 
             if (viagensParaHorario == null || viagensParaHorario.isEmpty()) {
@@ -605,7 +641,7 @@ public class ViagemService {
         }
     }
 
-    private Viagem buscarViagemPorId(Integer idViagem) {
+    public Viagem buscarViagemPorId(Integer idViagem) {
         return viagemRepository.findById(idViagem)
                 .orElseThrow(() -> new IllegalArgumentException("Viagem não encontrada para o ID: " + idViagem));
     }
@@ -665,4 +701,157 @@ public class ViagemService {
 
         return reservaViagemDto;
     }
+
+
+    public DetalhesViagemDto detalhesViagem(Integer idViagem) {
+        Viagem viagem = viagemRepository.findById(idViagem)
+                .orElseThrow(() -> new IllegalArgumentException("Viagem não encontrada para o ID: " + idViagem));
+
+        DetalhesViagemDto detalhesViagemDto = new DetalhesViagemDto();
+        detalhesViagemDto.setNomeMotorista(viagem.getMotorista().getNome());
+        detalhesViagemDto.setInicioViagem(viagem.getHorarioViagem());
+        detalhesViagemDto.setFoto(viagem.getMotorista().getUrlImagemUsuario());
+        detalhesViagemDto.setModeloCarro(viagem.getCarro().getMarca());
+        detalhesViagemDto.setCorCarro(viagem.getCarro().getCor());
+
+        double mediaEstrelasMotorista = calcularMediaEstrelas(viagem.getMotorista());
+
+        detalhesViagemDto.setQuantidadeEstrelas(mediaEstrelasMotorista);
+
+        try {
+            String origem = viagem.getPartida().getPontoPartida();
+            String destino = viagem.getDestino().getPontoDestino();
+
+            Coordenadas coordenadasOrigem = retornarLatitudeLongitude(origem);
+            Coordenadas coordenadasDestino = retornarLatitudeLongitude(destino);
+            double latitudeOrigem = coordenadasOrigem.getLatitude();
+            double longitudeOrigem = coordenadasOrigem.getLongitude();
+
+            double latitudeDestino = coordenadasDestino.getLatitude();
+            double longitudeDestino = coordenadasDestino.getLongitude();
+
+            detalhesViagemDto.setNomePartida(origem);
+            detalhesViagemDto.setNomeDestino(destino);
+            detalhesViagemDto.setLatitudePontoPartida(latitudeOrigem);
+            detalhesViagemDto.setLongitudePontoPartida(longitudeOrigem);
+            detalhesViagemDto.setLatitudePontoDestino(latitudeDestino);
+            detalhesViagemDto.setLongitudePontoDestino(longitudeDestino);
+            double tempoMedio = calcularTempo(origem, destino);
+            detalhesViagemDto.setTempoMedioViagem(tempoMedio);
+            detalhesViagemDto.setFimViagem(calcularFimViagem(viagem.getHorarioViagem(), tempoMedio));
+        } catch (Exception e) {
+            logger.error("Erro ao calcular o tempo médio de viagem", e);
+        }
+
+        Carro carro = viagem.getCarro();
+        if (carro != null) {
+            detalhesViagemDto.setNomeCarro(carro.getModelo());
+            detalhesViagemDto.setPlacaCarro(carro.getPlaca());
+        }
+
+        List<PassageiroDto> passageiros = viagem.getListaPassageiros().stream()
+                .map(this::toPassageiroDto)
+                .collect(Collectors.toList());
+        detalhesViagemDto.setPassageiros(passageiros);
+
+        return detalhesViagemDto;
+
+    }
+
+    private PassageiroDto toPassageiroDto(Usuario usuario) {
+        PassageiroDto dto = new PassageiroDto();
+        dto.setNome(usuario.getNome());
+        dto.setQuantidadeEstrelas(calcularMediaEstrelas(usuario));
+        return dto;
+    }
+
+    public Double calcularMediaEstrelas(Usuario usuario) {
+        List<Feedback> feedbacksViagem = getAllFeedbacksViagem(usuario);
+        List<Feedback> feedbacksUsuario = usuario.getFeedbacks();
+
+
+        double totalEstrelasViagem = feedbacksViagem.stream()
+                .mapToInt(feedback -> feedback.getCriteriosFeedback().getQuantidadeEstrelas())
+                .average()
+                .orElse(0.0);
+
+
+        double totalEstrelasUsuario = feedbacksUsuario.stream()
+                .mapToInt(feedback -> feedback.getCriteriosFeedback().getQuantidadeEstrelas())
+                .average()
+                .orElse(0.0);
+
+        return (totalEstrelasViagem + totalEstrelasUsuario) / 2;
+    }
+
+    private List<Feedback> getAllFeedbacksViagem(Usuario usuario) {
+        List<Feedback> allFeedbacks = new ArrayList<>();
+        for (Viagem viagem : usuario.getViagens()) {
+            allFeedbacks.addAll(viagem.getFeedbacks());
+        }
+        return allFeedbacks;
+    }
+
+
+
+
+
+    private String calcularFimViagem(String inicioViagem, double tempoMedioViagem) {
+        LocalTime inicio = LocalTime.parse(inicioViagem);
+        LocalTime fim = inicio.plusMinutes((long) tempoMedioViagem);
+        return fim.toString();
+    }
+
+    //
+
+    private Coordenadas retornarLatitudeLongitude(String endereco) {
+        String apiKey = "AIzaSyCjfdkq8uHIzU3mr1OZqAtkJggC-k2PZdo";
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + endereco + "&key=" + apiKey;
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+
+            JSONObject jsonObject = new JSONObject(response.body().string());
+            JSONArray results = jsonObject.getJSONArray("results");
+
+            if (results.isEmpty()) {
+                throw new Exception("No results found for the distance matrix");
+            }
+
+            JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
+            JSONObject location = geometry.getJSONObject("location");
+
+            double latitude = location.getDouble("lat");
+            double longitude = location.getDouble("lng");
+
+            return new Coordenadas(latitude, longitude);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao calcular a distância", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    class Coordenadas {
+        private double latitude;
+        private double longitude;
+
+        public Coordenadas(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+    }
+
 }

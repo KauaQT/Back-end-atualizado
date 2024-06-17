@@ -23,7 +23,7 @@ import java.util.Random;
 public class EmailService {
 
     public static void enviarEmail(String destinatario) {
-        final String remetente = "CaroonaSoftware123@outlook.com";
+        final String remetente = "caronasofwaresptech@outlook.com";
         final String senha = "460820Ab@";
 
         Properties props = new Properties();
@@ -58,7 +58,7 @@ public class EmailService {
     }
 
     public static void enviarEmailComAnexo(String destinatario, File anexo) {
-        final String remetente = "CaroonaSoftware123@outlook.com";
+        final String remetente = "caronasofwaresptech@outlook.com";
         final String senha = "460820Ab@";
 
         Properties props = new Properties();
@@ -99,7 +99,7 @@ public class EmailService {
     }
 
     public static String enviarTokenRecuperacao(String destinatario) {
-        final String remetente = "CaroonaSoftware123@outlook.com";
+        final String remetente = "caronasofwaresptech@outlook.com";
         final String senha = "460820Ab@";
 
         Properties props = new Properties();
