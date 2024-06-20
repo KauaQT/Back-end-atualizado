@@ -49,17 +49,4 @@ jobs:
         with:
           name: java-app
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: c6c48fa5-6ba9-434c-9d1d-bb912e87cf55
-          tenant-id:  fd50b457-84e0-400c-80f2-460f28eb41a6
-          subscription-id: db2018e3-6959-4e73-b250-2efd26c55efb
-        
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'kaua-back-carona'
-          slot-name: 'Production'
-          package: '*.jar'
+     
